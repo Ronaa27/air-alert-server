@@ -2,11 +2,16 @@ from flask import Flask, jsonify
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import re
 
 app = Flask(__name__)
 
 CHANNEL_URL = "https://t.me/s/sirena_dp"
+
+
+def kyiv_time():
+    return datetime.now(ZoneInfo("Europe/Kyiv")).strftime("%H:%M:%S")
 
 
 def parse_alert(text):
@@ -43,7 +48,7 @@ def get_alert_status():
             "alert": None,
             "online": False,
             "error": "Час очікування Telegram вичерпано",
-            "updated": datetime.now().strftime("%H:%M:%S")
+            "updated": kyiv_time()
         }
 
     except requests.exceptions.RequestException:
@@ -51,7 +56,7 @@ def get_alert_status():
             "alert": None,
             "online": False,
             "error": "Немає з'єднання з Telegram",
-            "updated": datetime.now().strftime("%H:%M:%S")
+            "updated": kyiv_time()
         }
 
 
@@ -72,7 +77,7 @@ def get_alert_status():
             "alert": None,
             "online": False,
             "error": "Повідомлення не знайдені",
-            "updated": datetime.now().strftime("%H:%M:%S")
+            "updated": kyiv_time()
         }
 
 
@@ -83,14 +88,16 @@ def get_alert_status():
         "alert": parse_alert(text),
         "message": text,
         "alert_time": get_alert_time(text),
-        "updated": datetime.now().strftime("%H:%M:%S"),
+        "updated": kyiv_time(),
         "online": True,
         "error": None
     }
 
+
 @app.route("/")
 def home():
     return "Air Alert Server is running"
+
 
 @app.route("/status")
 def status():
