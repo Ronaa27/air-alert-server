@@ -25,18 +25,21 @@ firebase_admin.initialize_app(cred)
 
 CHANNEL_URL = "https://t.me/s/sirena_dp"
 
-FCM_TOKEN = "dwBDUMhOTt6dmMOGUe6shM:APA91bF-M3Mz-eW4rLx5SPgaSCX824fJy6whZx3H5v9c8FJWCQPsFI7StZMeB86gwFDzzVoWIvERiycXznitsMTEIr53DoT9r5XUw-va4kDt5c7I-Wf9ems"
-
 last_alert = None
 
 
-def send_push(token, title, body):
+def send_push(topic, title, body):
     message = messaging.Message(
         notification=messaging.Notification(
             title=title,
             body=body,
         ),
-        token=token,
+        android=messaging.AndroidConfig(
+            notification=messaging.AndroidNotification(
+                channel_id="air_alert_channel",
+            )
+        ),
+        topic=topic,
     )
 
     response = messaging.send(message)
@@ -146,7 +149,7 @@ def monitor_alerts():
                 if current:
 
                     send_push(
-                        FCM_TOKEN,
+                        "dnipro_alert",
                         "🚨 Повітряна тривога",
                         "У Дніпрі оголошено повітряну тривогу"
                     )
@@ -154,7 +157,7 @@ def monitor_alerts():
                 else:
 
                     send_push(
-                        FCM_TOKEN,
+                        "dnipro_alert",
                         "✅ Відбій",
                         "У Дніпрі відбій повітряної тривоги"
                     )
@@ -169,7 +172,7 @@ def monitor_alerts():
 def test_push():
 
     send_push(
-        FCM_TOKEN,
+        "dnipro_alert",
         "🚨 Повітряна тривога",
         "Тестове повідомлення"
     )
