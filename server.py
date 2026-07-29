@@ -30,15 +30,10 @@ last_alert = None
 
 def send_push(topic, title, body):
     message = messaging.Message(
-        notification=messaging.Notification(
-            title=title,
-            body=body,
-        ),
-        android=messaging.AndroidConfig(
-            notification=messaging.AndroidNotification(
-                channel_id="air_alert_channel",
-            )
-        ),
+        data={
+            "title": title,
+            "body": body,
+        },
         topic=topic,
     )
 
