@@ -34,6 +34,9 @@ def send_push(topic, title, body):
             "title": title,
             "body": body,
         },
+        android=messaging.AndroidConfig(
+            priority="high",
+        ),
         topic=topic,
     )
 
