@@ -177,6 +177,17 @@ def test_push():
 
     return "Push sent"
 
+@app.route("/test_clear")
+def test_clear():
+
+    send_push(
+        "dnipro_alert",
+        "✅ Відбій",
+        "Тестове повідомлення"
+    )
+
+    return "Push sent"
+
 @app.route("/")
 def home():
     return "Air Alert Server is running"
